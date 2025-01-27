@@ -1,15 +1,19 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flappy_bird/game.dart';
 import '../constants.dart';
 
-class Ground extends SpriteComponent with HasGameRef<FlappyBirdGame> {
+class Ground extends SpriteComponent
+    with HasGameRef<FlappyBirdGame>, CollisionCallbacks {
   Ground() : super();
 
   @override
   Future<void> onLoad() async {
     size = Vector2(gameRef.size.x * 2, groundHeight);
-    position = Vector2(0, size.y - groundHeight);
+    position = Vector2(0, gameRef.size.y - groundHeight);
     sprite = await Sprite.load('ground.png');
+    //collision box
+    add(RectangleHitbox());
   }
 
   //UPDATE
