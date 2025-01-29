@@ -4,8 +4,8 @@ const double birdWidth = 65;
 const double birdHeight = 55;
 
 const double birdVelocity = 0;
-const double birdGravity = 170;
-const double birdJump = -200;
+const double birdGravity = 200;
+const double birdJump = -180;
 const double groundHeight = 200;
 const double groundSpeed = 200;
 

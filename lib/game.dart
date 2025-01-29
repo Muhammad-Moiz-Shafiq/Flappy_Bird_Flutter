@@ -22,63 +22,90 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   late Ground ground;
   late PipeManager pipeManager;
   late ScoreText scoreText;
-  //LOADING
+
+  bool isGameOver = false;
+  bool isGameStarted = false; // Indicates if the game has started
+
+  // LOADING
   @override
   FutureOr<void> onLoad() async {
     bg = Background(size);
     add(bg);
+
     ground = Ground();
     add(ground);
+
     pipeManager = PipeManager();
     add(pipeManager);
+
     scoreText = ScoreText();
     add(scoreText);
+
     bird = Bird();
     add(bird);
+
+    pauseEngine(); // Pause the game initially
+    overlays.add('StartButton'); // Show the start button overlay
   }
 
-  //TAP
+  // TAP
   @override
   void onTap() {
-    bird.flap();
+    if (isGameStarted) {
+      bird.flap();
+    }
   }
 
-  //Game Over
-  bool isGameOver = false;
+  // Game Over
   void gameOver() {
-    //preventing multiple game over calls
     if (isGameOver) return;
 
     isGameOver = true;
     pauseEngine();
 
     showDialog(
-        context: buildContext!,
-        builder: (context) => AlertDialog(
-              title: const Text('Game Over'),
-              content: Text('Your Score: $score'),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      restartGame();
-                    },
-                    child: Text('Restart'))
-              ],
-            ));
+      context: buildContext!,
+      builder: (context) => AlertDialog(
+        title: const Text('Game Over'),
+        content: Text('Your Score: $score'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              //restartGame();
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    ).then((_) {
+      // Handle dialog dismissal (e.g., back button press)
+      if (isGameOver) restartGame();
+    });
   }
 
   void restartGame() {
     isGameOver = false;
+    isGameStarted = false;
     bird.position = Vector2(birdPosX, birdPosY);
     bird.velocity = birdVelocity;
     score = 0;
-    //removing all pipes
+
+    // Removing all pipes
     children.whereType<Pipe>().forEach((Pipe pipe) => pipe.removeFromParent());
+
+    pauseEngine();
+    overlays.add('StartButton'); // Show the start button overlay again
+  }
+
+  // Start Game
+  void startGame() {
+    isGameStarted = true;
+    overlays.remove('StartButton'); // Remove the start button overlay
     resumeEngine();
   }
 
-  //SCORE
+  // Score
   int score = 0;
   void incrementScore() {
     score++;
