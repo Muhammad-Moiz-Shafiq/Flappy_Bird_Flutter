@@ -10,7 +10,7 @@ class PipeManager extends Component with HasGameRef<FlappyBirdGame> {
   @override
   void update(double dt) {
     pipeSpawnTimer += dt;
-    const double pipeSpawnInterval = 2;
+    const double pipeSpawnInterval = 2.2;
     if (pipeSpawnTimer > pipeSpawnInterval) {
       pipeSpawnTimer = 0;
       spawnPipe();

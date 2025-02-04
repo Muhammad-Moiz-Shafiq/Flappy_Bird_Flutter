@@ -45,7 +45,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     add(bird);
 
     pauseEngine(); // Pause the game initially
-    overlays.add('StartButton'); // Show the start button overlay
   }
 
   // TAP
